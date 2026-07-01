@@ -1,0 +1,76 @@
+const js = require(`@eslint/js`);
+const eslintPluginPrettierRecommended = require(
+  `eslint-plugin-prettier/recommended`,
+);
+
+module.exports = [
+  {
+    ignores: [`**/disabled/`],
+  },
+  js.configs.recommended,
+  {
+    languageOptions: {
+      ecmaVersion: `latest`,
+      globals: {
+        $: true,
+        require: true,
+        process: true,
+        __dirname: true,
+        module: true,
+        fetch: true,
+        setTimeout: true,
+        clearTimeout: true,
+        clearInterval: true,
+        setInterval: true,
+        console: true,
+      },
+    },
+
+    rules: {
+      "arrow-spacing": [`warn`, { before: true, after: true }],
+      "brace-style": [`error`, `1tbs`, { allowSingleLine: true }],
+      "comma-dangle": [`error`, `always-multiline`],
+      "comma-spacing": `error`,
+      "comma-style": `error`,
+      curly: [`error`, `multi-line`, `consistent`],
+      "dot-location": [`error`, `property`],
+      "handle-callback-err": `off`,
+      indent: `off`,
+      "keyword-spacing": `error`,
+      "max-nested-callbacks": [`error`, { max: 10 }],
+      "max-statements-per-line": [`error`, { max: 2 }],
+      "no-console": `off`,
+      "no-case-declarations": `off`,
+      "no-empty-function": `error`,
+      "no-floating-decimal": `error`,
+      "no-inline-comments": `off`,
+      "no-lonely-if": `error`,
+      "no-multi-spaces": `error`,
+      "no-unused-vars": 1,
+      "no-multiple-empty-lines": [`error`, { max: 2, maxEOF: 1, maxBOF: 0 }],
+      "no-shadow": `off`,
+      "no-trailing-spaces": [`error`],
+      "no-var": `error`,
+      "no-undef": `warn`,
+      "object-curly-spacing": [`error`, `always`],
+      "prefer-const": `error`,
+      quotes: [`error`, `backtick`],
+      semi: [`error`, `always`],
+      "space-before-blocks": `error`,
+      "space-before-function-paren": [
+        `error`,
+        {
+          anonymous: `never`,
+          named: `never`,
+          asyncArrow: `always`,
+        },
+      ],
+      "space-in-parens": `error`,
+      "space-infix-ops": `error`,
+      "space-unary-ops": `error`,
+      "spaced-comment": `error`,
+      yoda: `error`,
+    },
+  },
+  eslintPluginPrettierRecommended,
+];
