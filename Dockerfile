@@ -1,4 +1,4 @@
-FROM node:latest-alpine
+FROM node:current-alpine
 COPY package*.json ./
 RUN npm install
 COPY . .
