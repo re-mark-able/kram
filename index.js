@@ -1,11 +1,6 @@
-const {
-  Client,
-  Options,
-  GatewayIntentBits,
-  Partials,
-  Events,
-  Collection,
-} = require(`discord.js`);
+const { Client, Options, GatewayIntentBits, Partials, Collection } = require(
+  `discord.js`,
+);
 const logger = require(`./utils/logger.js`);
 const path = require(`node:path`);
 const fs = require(`node:fs`);

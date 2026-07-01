@@ -1,4 +1,4 @@
-const { Events } = require(`discord.js`);
+const { Events, MessageFlags } = require(`discord.js`);
 const logger = require(`../utils/logger.js`);
 
 module.exports = {
