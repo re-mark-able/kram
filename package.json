@@ -21,10 +21,10 @@
   },
   "homepage": "https://github.com/re-mark-able/kram#readme",
   "dependencies": {
+    "dayjs": "^1.11.21",
     "discord.js": "^14.26.4",
-    "pino": "^10.3.1",
     "express": "^5.2.1",
-    "dayjs": "^1.11.21"
+    "pino": "^10.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

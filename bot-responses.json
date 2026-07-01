@@ -1,0 +1,111 @@
+{
+  "botResponses": {
+    "crazy": "Crazy? I was crazy once. They locked me in a room. A rubber room. A rubber room with rats. The rats made me crazy.",
+    "hey": "A horse walks into a bar.\r\n**Bartender:** Hey.\r\n**Horse:** Sure.",
+    "joke": "I've got a great joke about construction, but I'm still working on it.",
+    "mountain": "Mountains aren't just funny. They're hill areas.",
+    "pizza": "I could tell a joke about pizza, but it's a little cheesy.",
+    "sense": "100 cents make a dollar",
+    "toilet": "Why are toilets always so good at poker? They always get a flush",
+    "smith": "How do you follow Will Smith in the snow? You follow the fresh prints.",
+    "braille": "I'm reading a horror book in Braille. Something terrible's about to happen. I can feel it.",
+    "pos larry": "https://media.tenor.com/Dy0p6yWsRgwAAAPo/larry-david.mp4",
+    "that's what she said": "https://media.tenor.com/frm88cjIawcAAAAd/appu-appu-rajosh.gif",
+    "i can fix": "https://media.tenor.com/ociReMdw4wQAAAAC/funny-not-funny-funny.gif",
+    "make like a tree": "https://media.tenor.com/uDp-wl1_zXQAAAAd/thank-you-make-like-a-tree-and-get-outta-here.gif",
+    "ceiling": "The ceiling isn't my favourite part of the house. ||But it's definitely up there.||",
+    "roof": "A storm blew away 25% of my roof last night.  Oof.",
+    "<@1026495225759277146>": [
+      "I'm not sleeping, I'm just resting my eyes?",
+      "Don't use that tone with me",
+      "Working hard or hardly working?",
+      "When you're my age, then we can talk.",
+      "Be careful of robots! They byte!",
+      "What happens to a robot when they're on the junk pile? ||They just rust in peace||",
+      "What do you call a robot member of a crew team? ||A row-bot.||",
+      "Why was the robot angry? ||Everyone kept pushing his buttons.||",
+      "Why are robots so insecure? ||They only have artificial intelligence.||",
+      "The robot visited the town cobbler. He needed to be rebooted.",
+      "Why don't robots like apples? ||Because they're Androids.||",
+      "The angry robot had a real chip on his shoulder.",
+      "The robot was embarrassed to change clothes in front of others. He had hardware and software, but no underwear.",
+      "What do you call a Hispanic family of robots who live in Dallas? ||Tex-mechs.||",
+      "The most popular hairstyle of robots is droid-locks",
+      "What sound does a robot sheep make? ||Be-e-e-p! Be-e-e-p!||",
+      "How do baby robots get their milk? ||From a ro-bottle.||",
+      "What is the favorite robot film? ||Raiders of the Lost Spark.||",
+      "Why did the robot cross the road? ||The chicken was out of order.||",
+      "Why did the robot go to the doctor? ||Because he had a virus.||",
+      "An accident on the freeway meant the robots all had to take the R2-Detour.",
+      "Why was the robot worker tired when he got home? ||He had a hard drive.||",
+      "What did the robot in hiding say to the policeman? ||I am not the droid you are looking for.||",
+      "A favorite robot's meal at Dell Taco is Silicone Carne.",
+      "Robots make boring public speakers because they just keep droning on.",
+      "What kinds of food do robots eat? ||A bit of this and a byte of that.||",
+      "Where do kid robots love to go? ||To the big tent at the circuits.||",
+      "Why did the boy robot like to play outside? He was solar-powered.",
+      "The robot vacuum cleaned the house roomba by roomba.",
+      "What do you call a robot who always runs into the wall? ||Wall-E||",
+      "I went to a robot convention. It was very aluminium-ating!"
+    ],
+    "mark": [
+      "Mark is my master (he said I had to say that else he would shut me down)",
+      "I'm a big fan of whiteboards. I find them quite re**mark**able.",
+      "I've decided to name my son Mark. That way, when I die, I'll be able to say I left a mark on this world.",
+      "My son asked if he could have a book mark. I broke down crying. Its been 15 years and he still won't call me dad!",
+      "My friend Mark works in a library. He is a bookmark.",
+      "I want to know what the fear of question marks is called but I'm afraid to ask.",
+      "I'm a bit too bad at puns, I know if I tried I'd just end up missing the mark.",
+      "Mark my words, my jokes will leave a mark.",
+      "For Halloween I went as the colour blue and my friend Mark as red",
+      "What? Were you expecting some sort of remark?"
+    ]
+  },
+  "questionResponses": {
+    "when": ["Later", "Tomorrow", "Yesterday", "Eventually", "Next Octember"],
+    "where": ["Here.", "Over there.", "Nowhere", "Where else?", "The moon"],
+    "who": [
+      "You are.",
+      "Me of course!",
+      "Who else?",
+      "Who knows?",
+      "I have no idea"
+    ],
+    "why": [
+      "Why not?",
+      "uhh...",
+      "42",
+      "Because Mark said so.",
+      "I honestly have no idea",
+      "I was programmed that way"
+    ]
+  },
+  "magicball": {
+    "yes": [
+      "It is certain",
+      "It is decidedly so",
+      "Without a doubt",
+      "Yes definitely",
+      "You may rely on it",
+      "As I see it, yes",
+      "Most likely",
+      "Outlook good",
+      "Yes",
+      "Signs point to yes"
+    ],
+    "no": [
+      "Don't count on it",
+      "My reply is no",
+      "My sources say no",
+      "Outlook not so good",
+      "Very doubtful"
+    ],
+    "maybe": [
+      "Reply hazy, try again",
+      "Ask again later",
+      "Better not tell you now",
+      "Cannot predict now",
+      "Concentrate and ask again"
+    ]
+  }
+}
