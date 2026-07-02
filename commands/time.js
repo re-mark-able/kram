@@ -29,8 +29,10 @@ module.exports = {
         .setDescription("the user to check. Leave blank for yours."),
     ),
   async execute(interaction) {
+    await interaction.deferReply();
     const setTimeModal = new ModalBuilder()
       .setCustomId("setTimeModal")
+      .setTitle("Set Time")
       .addTextDisplayComponents((textDisplay) =>
         textDisplay.setContent(
           "[Click here to find your timezone]<https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>",
@@ -63,11 +65,11 @@ module.exports = {
     } else if (dbUser.gmt_offset.includes("/")) {
       // assume its a timezone
       const displayTime = dayjs().tz(dbUser.gmt_offset);
-      outputContent.push(`> ${displayTime.format("YYYY-MM-DD HH:mm:ss")}`);
+      outputContent.push(`> ${displayTime.format("DD-MM-YYYY HH:mm:ss")}`);
     } else {
       // its a GMT +00:00
       const displayTime = dayjs().utcOffset(dbUser.gmt_offset);
-      outputContent.push(`> ${displayTime.format("YYYY-MM-DD HH:mm:ss")}`);
+      outputContent.push(`> ${displayTime.format("DD-MM-YYYY HH:mm:ss")}`);
     }
 
     const outputContainer = new ContainerBuilder()
@@ -88,7 +90,7 @@ module.exports = {
       );
     }
 
-    const response = await interaction.reply({
+    const response = await interaction.followUp({
       components: [outputContainer],
       flags: MessageFlags.IsComponentsV2,
       allowedMentions: {},
@@ -135,14 +137,17 @@ module.exports = {
                 flags: MessageFlags.Ephemeral,
               });
             }
+            collector.stop();
           })
-          .catch((mErr) => logger.error(mErr, "Time modal error"));
+          .catch((mErr) => {
+            logger.error(mErr, "Time modal error");
+            collector.stop();
+          });
       }
-      collector.stop();
     });
 
     collector.on("end", async () => {
-      outputContainer.components[1].accessory.setDisabled(true);
+      outputContainer.components.pop();
       await interaction.editReply({ components: [outputContainer] });
     });
   },
