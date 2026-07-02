@@ -55,6 +55,7 @@ module.exports = {
       `-# 🤖 **${interaction.guild.name}**`,
       `> \`Channels  \`: ${interaction.guild.channels.cache.size}`,
       `> \`Members   \`: ${interaction.guild.memberCount}`,
+      `> \`Roles     \`: ${interaction.guild.roles.cache.size}`,
       `> \`Owner     \`: ${userMention(interaction.guild.ownerId)}`,
       `> \`Level     \`: ${interaction.guild.premiumTier}`,
       `> \`Created:  \`: ${time(interaction.guild.createdAt, "R")}`,

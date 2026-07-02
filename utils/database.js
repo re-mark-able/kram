@@ -23,6 +23,10 @@ const dbTables = {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    gmt_offset: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   }),
 };
 
