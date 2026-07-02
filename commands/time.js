@@ -33,46 +33,42 @@ module.exports = {
       where: { user_id: checkUser.id },
     });
 
+    const outputContent = [`### ${checkUser}'s Current Time`];
     if (!dbUser || !dbUser.gmt_offset) {
-      await interaction.reply({
-        content: `${checkUser} does not have a time set.`,
-        flags: MessageFlags.Ephemeral,
-      });
+      // None
+      outputContent.push(`> Not set`);
+    } else if (dbUser.gmt_offset.includes("/")) {
+      // assume its a timezone
+      const displayTime = dayjs().tz(dbUser.gmt_offset);
+      outputContent.push(`> ${displayTime.format("YYYY-MM-DD HH:mm:ss")}`);
     } else {
-      const outputContent = [`### ${checkUser}'s Current Time`];
-      if (dbUser.gmt_offset.includes("/")) {
-        // assume its a timezone
-        const displayTime = dayjs().tz(dbUser.gmt_offset);
-        outputContent.push(`> ${displayTime.format("YYYY-MM-DD HH:mm:ss")}`);
-      } else {
-        // its a GMT +00:00
-        const displayTime = dayjs().utcOffset(dbUser.gmt_offset);
-        outputContent.push(`> ${displayTime.format("YYYY-MM-DD HH:mm:ss")}`);
-      }
-
-      const outputContainer = new ContainerBuilder()
-        .setAccentColor(Colors.Aqua)
-        .addTextDisplayComponents((textDisplay) =>
-          textDisplay.setContent(outputContent.join("\n")),
-        );
-
-      if (checkUser.id === interaction.user.id) {
-        // Add button to change time
-        outputContainer.addActionRowComponents((actionRow) =>
-          actionRow.setComponents(
-            new ButtonBuilder()
-              .setCustomId("set_timezone")
-              .setLabel("Set Time")
-              .setStyle(ButtonStyle.Primary),
-          ),
-        );
-      }
-
-      await interaction.reply({
-        components: [outputContainer],
-        flags: MessageFlags.IsComponentsV2,
-        allowedMentions: {},
-      });
+      // its a GMT +00:00
+      const displayTime = dayjs().utcOffset(dbUser.gmt_offset);
+      outputContent.push(`> ${displayTime.format("YYYY-MM-DD HH:mm:ss")}`);
     }
+
+    const outputContainer = new ContainerBuilder()
+      .setAccentColor(Colors.Aqua)
+      .addTextDisplayComponents((textDisplay) =>
+        textDisplay.setContent(outputContent.join("\n")),
+      );
+
+    if (checkUser.id === interaction.user.id) {
+      // Add button to change time
+      outputContainer.addActionRowComponents((actionRow) =>
+        actionRow.setComponents(
+          new ButtonBuilder()
+            .setCustomId("set_timezone")
+            .setLabel("Set Time")
+            .setStyle(ButtonStyle.Primary),
+        ),
+      );
+    }
+
+    await interaction.reply({
+      components: [outputContainer],
+      flags: MessageFlags.IsComponentsV2,
+      allowedMentions: {},
+    });
   },
 };
