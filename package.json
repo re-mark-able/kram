@@ -23,7 +23,6 @@
   "dependencies": {
     "dayjs": "^1.11.21",
     "discord.js": "^14.26.4",
-    "express": "^5.2.1",
     "node-wordnet": "^0.1.12",
     "nspell": "^2.1.5",
     "pino": "^10.3.1",

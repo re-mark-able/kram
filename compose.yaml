@@ -1,7 +1,6 @@
 services:
   kram:
     build: .
-    container_name: kram
     restart: unless-stopped
     env_file:
       - .env
