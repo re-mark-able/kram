@@ -3,6 +3,7 @@ const { botResponses, questionResponses, magicball } = require(
   `../bot-responses.json`,
 );
 const path = require("path");
+const logger = require("../utils/logger");
 const absolutePath = path.join(__dirname, "..", "img");
 
 module.exports = {
@@ -25,9 +26,13 @@ module.exports = {
       } else if (message.author.id === userId) {
         message.client.afk.delete(userId);
         await message.reply(`You are no longer AFK.`);
-        await message.member.setNickname(
-          message.member.displayName.replace("[AFK] ", ""),
-        );
+        try {
+          await message.member.setNickname(
+            message.member.displayName.replace("[AFK] ", ""),
+          );
+        } catch (err) {
+          logger.error(err, "Cannot change nickname on AFK");
+        }
       }
     }
 
