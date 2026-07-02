@@ -55,8 +55,6 @@ module.exports = {
         logger.error(error, `Autocomplete error`);
       }
       return;
-    } else {
-      return;
     }
   },
 };
