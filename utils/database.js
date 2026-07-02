@@ -29,10 +29,10 @@ const dbTables = {
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
-    logger.info("Connection has been established successfully.");
+    logger.info("[DATABASE] Connection has been established successfully.");
     await sequelize.sync({ alter: true });
   } catch (error) {
-    logger.error("Unable to connect to the database:", error);
+    logger.error(error, "[DATABASE] Unable to connect");
   }
 };
 
