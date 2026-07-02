@@ -2,6 +2,8 @@ const { Events, AttachmentBuilder } = require(`discord.js`);
 const { botResponses, questionResponses, magicball } = require(
   `../bot-responses.json`,
 );
+const path = require("path");
+const absolutePath = path.join(__dirname, "..", "img");
 
 module.exports = {
   name: Events.MessageCreate,
@@ -13,6 +15,7 @@ module.exports = {
       message.react(`<a:marty_board:1521751800083124366>`);
     }
     if (message.author.bot) return;
+
     if (
       message.content.split(" ").length > 1 &&
       message.content.slice(-1) == "?" &&
@@ -52,7 +55,8 @@ module.exports = {
           .replace(/[^a-zA-Z0-9 ]/g, "")
           .includes(word),
       );
-      if (!response || botResponses[response]) return;
+
+      if (!response) return;
       if (Array.isArray(botResponses[response])) {
         const randomIndex = Math.floor(
           Math.random() * botResponses[response].length,
@@ -61,7 +65,7 @@ module.exports = {
 
         if (randomResponse.includes("attachment://")) {
           const file = new AttachmentBuilder(
-            randomResponse.replace("attachment://", "./img/"),
+            randomResponse.replace("attachment://", absolutePath + "/"),
           );
           message.reply({ files: [file] });
         } else {
@@ -69,7 +73,7 @@ module.exports = {
         }
       } else if (botResponses[response].includes("attachment://")) {
         const file = new AttachmentBuilder(
-          botResponses[response].replace("attachment://", "./img/"),
+          botResponses[response].replace("attachment://", absolutePath + "/"),
         );
         message.reply({ files: [file] });
       } else {

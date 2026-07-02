@@ -8,6 +8,9 @@ const {
 } = require("discord.js");
 const config = require("../utils/config.js");
 
+const path = require("path");
+const absolutePath = path.join(__dirname, "img");
+
 module.exports = {
   name: Events.GuildMemberAdd,
   async execute(member) {
@@ -22,7 +25,7 @@ module.exports = {
       `-# Member number **${member.guild.memberCount}**`,
     ];
 
-    const file = new AttachmentBuilder("./img/they_found_me.gif");
+    const file = new AttachmentBuilder(`${absolutePath}/they_found_me.gif`);
 
     const welcomeContainer = new ContainerBuilder()
       .setAccentColor(Colors.Green)

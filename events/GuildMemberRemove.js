@@ -9,6 +9,9 @@ const {
 const config = require("../utils/config.js");
 const { dbTables } = require("../utils/database.js");
 
+const path = require("path");
+const absolutePath = path.join(__dirname, "..", "/img");
+
 module.exports = {
   name: Events.GuildMemberRemove,
   async execute(member) {
@@ -17,7 +20,9 @@ module.exports = {
       config.channels.welcome,
     );
 
-    const file = new AttachmentBuilder("./img/see_you_in_the_future.gif");
+    const file = new AttachmentBuilder(
+      `${absolutePath}/img/see_you_in_the_future.gif`,
+    );
 
     const welcomeContainer = new ContainerBuilder()
       .setAccentColor(Colors.Green)
