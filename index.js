@@ -42,6 +42,7 @@ const client = new Client({
 
 /* Setup collections */
 client.commands = new Collection();
+client.afk = new Collection();
 
 /* Setup commands */
 const commandsPath = path.join(__dirname, "commands");

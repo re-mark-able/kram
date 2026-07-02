@@ -1,4 +1,4 @@
-const { Events, AttachmentBuilder } = require(`discord.js`);
+const { Events, AttachmentBuilder, userMention, time } = require(`discord.js`);
 const { botResponses, questionResponses, magicball } = require(
   `../bot-responses.json`,
 );
@@ -14,6 +14,15 @@ module.exports = {
       message.content.includes("<@765796161499824148>")
     ) {
       message.react(`<a:marty_board:1521751800083124366>`);
+    }
+
+    for (const [userId, afk] of message.client.afk) {
+      if (message.content.includes(userId)) {
+        await message.reply({
+          content: `${userMention(userId)} is AFK (since ${time(afk.since, "R")}).${!afk.reason ? `` : `..\n> _${afk.reason}_`}`,
+          allowedMentions: {},
+        });
+      }
     }
 
     if (
