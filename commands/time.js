@@ -35,7 +35,7 @@ module.exports = {
       .setTitle("Set Time")
       .addTextDisplayComponents((textDisplay) =>
         textDisplay.setContent(
-          "[Click here to find your timezone]<https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>",
+          "[Click here to find your timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)",
         ),
       )
       .addLabelComponents((label) =>
