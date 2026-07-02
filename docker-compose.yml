@@ -1,8 +1,6 @@
 services:
   kram:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: kram
     restart: unless-stopped
     env_file:
