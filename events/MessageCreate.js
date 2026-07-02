@@ -25,6 +25,9 @@ module.exports = {
       } else if (message.author.id === userId) {
         message.client.afk.delete(userId);
         await message.reply(`You are no longer AFK.`);
+        await message.member.setNickname(
+          message.member.displayName.replace("[AFK] ", ""),
+        );
       }
     }
 
