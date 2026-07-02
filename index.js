@@ -38,9 +38,6 @@ const client = new Client({
       filter: () => (user) => user.bot && user.id !== user.client.user.id, // Remove all bots.
     },
   },
-  rest: {
-    makeRequest: (url, init) => fetch(url, init),
-  },
 });
 
 /* Setup collections */
