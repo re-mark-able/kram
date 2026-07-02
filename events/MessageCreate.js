@@ -8,13 +8,13 @@ const absolutePath = path.join(__dirname, "..", "img");
 module.exports = {
   name: Events.MessageCreate,
   async execute(message) {
+    if (message.author.bot) return;
     if (
       message.content.toLowerCase().includes("mark") ||
       message.content.includes("<@765796161499824148>")
     ) {
       message.react(`<a:marty_board:1521751800083124366>`);
     }
-    if (message.author.bot) return;
 
     if (
       message.content.split(" ").length > 1 &&
