@@ -12,22 +12,25 @@ module.exports = {
         .setName("primary_colour")
         .setDescription("The primary colour for your role.")
         .setRequired(true),
-    )
-    .addStringOption((option) =>
+    ),
+  /* .addStringOption((option) =>
       option
         .setName("secondary_colour")
         .setDescription(
           "The secondary colour for your role (if gradients enabled).",
         )
         .setRequired(false),
-    ),
+    )*/
   async execute(interaction) {
     if (!isValidHex(interaction.options.getString("primary_colour"))) {
       return await interaction.reply({
         content: `${interaction.options.getString("primary_colour")} is not a valid hex code.`,
         flags: MessageFlags.Ephemeral,
       });
-    } else if (!isValidHex(interaction.options.getString("secondary_colour"))) {
+    } else if (
+      interaction.options.getString("secondary_colour") &&
+      !isValidHex(interaction.options.getString("secondary_colour"))
+    ) {
       return await interaction.reply({
         content: `${interaction.options.getString("primary_colour")} is not a valid hex code.`,
         flags: MessageFlags.Ephemeral,
