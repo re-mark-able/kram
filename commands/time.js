@@ -94,56 +94,56 @@ module.exports = {
       allowedMentions: {},
     });
 
-    const collectorFilter = (i) => {
-      i.deferUpdate();
-      return i.user.id === interaction.user.id;
-    };
-
     const response = await interaction.fetchReply();
 
     response
       .awaitMessageComponent({
-        filter: collectorFilter,
         componentType: ComponentType.Button,
         time: 60_000,
-        max: 1,
       })
       .then(async (i) => {
-        outputContainer.components[1].accessory.setDisabled(true);
-        await interaction.editReply({ components: [outputContainer] });
-        await i.showModal(setTimeModal);
+        if (i.user.id !== interaction.user.id) {
+          await i.reply({
+            content: "This is not for you",
+            flags: MessageFlags.Ephemeral,
+          });
+        } else {
+          outputContainer.components[1].accessory.setDisabled(true);
+          await interaction.editReply({ components: [outputContainer] });
+          await i.showModal(setTimeModal);
 
-        i.awaitModalSubmit({ time: 60_000 })
-          .then(async (mi) => {
-            const timezone = mi.fields.getTextInputValue(`timeInput`);
-            if (timezone.includes("/") && dayjs().tz(timezone)) {
-              // valid
-              await dbUser.update({ gmt_offset: timezone });
-              await mi.reply({
-                content: `Your timezone has been set.`,
-                flags: MessageFlags.Ephemeral,
-              });
-            } else if (
-              timezone.charAt(0) === "+" &&
-              timezone.charAt(3) === ":" &&
-              timezone.length === "6" &&
-              dayjs().utcOffset(timezone)
-            ) {
-              // valid
-              await dbUser.update({ gmt_offset: timezone });
-              await mi.reply({
-                content: `Your timezone has been set.`,
-                flags: MessageFlags.Ephemeral,
-              });
-            } else {
-              // invalid
-              await mi.reply({
-                content: `Format provided was invalid. It must be either timezone or GMT offset such as:\n> Australia/Perth\n> +08:00`,
-                flags: MessageFlags.Ephemeral,
-              });
-            }
-          })
-          .catch((mErr) => logger.error(mErr, "Time modal error"));
+          i.awaitModalSubmit({ time: 60_000 })
+            .then(async (mi) => {
+              const timezone = mi.fields.getTextInputValue(`timeInput`);
+              if (timezone.includes("/") && dayjs().tz(timezone)) {
+                // valid
+                await dbUser.update({ gmt_offset: timezone });
+                await mi.reply({
+                  content: `Your timezone has been set.`,
+                  flags: MessageFlags.Ephemeral,
+                });
+              } else if (
+                timezone.charAt(0) === "+" &&
+                timezone.charAt(3) === ":" &&
+                timezone.length === "6" &&
+                dayjs().utcOffset(timezone)
+              ) {
+                // valid
+                await dbUser.update({ gmt_offset: timezone });
+                await mi.reply({
+                  content: `Your timezone has been set.`,
+                  flags: MessageFlags.Ephemeral,
+                });
+              } else {
+                // invalid
+                await mi.reply({
+                  content: `Format provided was invalid. It must be either timezone or GMT offset such as:\n> Australia/Perth\n> +08:00`,
+                  flags: MessageFlags.Ephemeral,
+                });
+              }
+            })
+            .catch((mErr) => logger.error(mErr, "Time modal error"));
+        }
       })
       .catch(async (err) => {
         // remove button
