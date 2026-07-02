@@ -46,5 +46,13 @@ module.exports = {
     await dbTables.User.destroy({
       where: { user_id: member.user.id },
     });
+
+    const userRole = member.guild.roles.cache.find(
+      (r) => r.name === member.user.username,
+    );
+
+    if (userRole) {
+      await userRole.delete("Member left server.");
+    }
   },
 };
