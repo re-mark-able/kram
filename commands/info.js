@@ -3,6 +3,8 @@ const {
   ContainerBuilder,
   Colors,
   MessageFlags,
+  userMention,
+  time,
 } = require("discord.js");
 const si = require("systeminformation");
 
@@ -16,22 +18,16 @@ module.exports = {
 
     const websocketPing = interaction.client.ws.ping;
 
-    let totalSeconds = interaction.client.uptime / 1000;
+    const uptime = new Date();
+    uptime.setSeconds(uptime.getSeconds() - interaction.client.uptime / 1000);
 
-    // Calculate time units
-    const days = Math.floor(totalSeconds / 86400);
-    totalSeconds %= 86400;
-    const hours = Math.floor(totalSeconds / 3600);
-    totalSeconds %= 3600;
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = Math.floor(totalSeconds % 60);
     const cpuStats = await si.cpu();
     const cpuTemp = await si.cpuTemperature();
     const os = await si.osInfo();
     const mem = await si.mem();
     const currentLoad = await si.currentLoad();
-    const processes = await si.processLoad();
-    const nodeProcess = processes.find((p) => p.proc == "node");
+    // const processes = await si.processLoad();
+    // const nodeProcess = processes.find((p) => p.proc == "node");
     const packageJSON = require("../package.json");
 
     const output = [
@@ -55,7 +51,14 @@ module.exports = {
       `> \`Users     \`: ${interaction.client.users.cache.size}`,
       `> \`Ping      \`: ${websocketPing}ms`,
       `> \`Shards    \`: ${interaction.client.ws.totalShards}`,
-      `> \`Uptime:   \`: ${days}d ${hours}h ${minutes}m ${seconds}s`,
+      `> \`Uptime:   \`: ${time(uptime, "R")}`,
+      `-# 🤖 **${interaction.guild.name}**`,
+      `> \`Channels  \`: ${interaction.guild.channels.cache.size}`,
+      `> \`Members   \`: ${interaction.guild.memberCount}`,
+      `> \`Owner     \`: ${userMention(interaction.guild.ownerId)}`,
+      `> \`Level     \`: ${interaction.guild.premiumTier}`,
+      `> \`Created:  \`: ${time(interaction.guild.createdAt, "R")}`,
+      `> \`Joined:   \`: ${time(interaction.guild.joinedAt, "R")}`,
     ];
 
     const outputContainer = new ContainerBuilder()
@@ -67,6 +70,7 @@ module.exports = {
     await interaction.followUp({
       components: [outputContainer],
       flags: MessageFlags.IsComponentsV2,
+      allowedMentions: {},
     });
   },
 };
