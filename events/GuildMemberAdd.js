@@ -9,7 +9,7 @@ const {
 const config = require("../utils/config.js");
 
 const path = require("path");
-const absolutePath = path.join(__dirname, "img");
+const absolutePath = path.join(__dirname, "..", "img");
 
 module.exports = {
   name: Events.GuildMemberAdd,
