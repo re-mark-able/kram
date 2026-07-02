@@ -29,6 +29,7 @@
     "pino": "^10.3.1",
     "sequelize": "^6.37.8",
     "sqlite3": "^6.0.1",
+    "systeminformation": "^5.31.11",
     "wndb-with-exceptions": "^3.0.2"
   },
   "devDependencies": {
