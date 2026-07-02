@@ -12,7 +12,6 @@ module.exports = {
     ),
   async execute(interaction) {
     if (interaction.client.afk.has(interaction.user.id)) {
-      // turn off
       interaction.client.afk.delete(interaction.user.id);
       await interaction.reply(`You are no longer AFK.`);
     } else {

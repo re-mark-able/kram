@@ -22,6 +22,9 @@ module.exports = {
           content: `${userMention(userId)} is AFK (since ${time(afk.since, "R")}).${!afk.reason ? `` : `..\n> _${afk.reason}_`}`,
           allowedMentions: {},
         });
+      } else if (message.author.id === userId) {
+        message.client.afk.delete(userId);
+        await message.reply(`You are no longer AFK.`);
       }
     }
 
