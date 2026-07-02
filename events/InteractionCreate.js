@@ -3,8 +3,13 @@ const logger = require(`../utils/logger.js`);
 
 module.exports = {
   name: Events.InteractionCreate,
-  once: true,
   async execute(interaction) {
+    if (
+      interaction.user.bot ||
+      interaction.client.user.id !== process.env.CLIENT_ID
+    )
+      return;
+
     if (!interaction.isChatInputCommand()) return;
     const command = interaction.client.commands.get(interaction.commandName);
 

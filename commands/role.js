@@ -9,25 +9,25 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("primary_colour")
-        .setDescription("The primarycolour for your role.")
-        .setRequired(false),
+        .setDescription("The primary colour for your role.")
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName("secondary_colour")
-        .setDescription("The colour for your role (if gradients enabled).")
+        .setDescription(
+          "The secondary colour for your role (if gradients enabled).",
+        )
         .setRequired(false),
     ),
   async execute(interaction) {
-    const [currentRole, created] = await dbTables.User.findOrCreate({
-      where: { user_id: interaction.user.id },
-    });
+    try {
+      const [currentRole, created] = await dbTables.User.findOrCreate({
+        where: { user_id: interaction.user.id },
+      });
 
-    let failed = false;
-    let role;
-    if (created) {
-      try {
-        role = await interaction.guild.roles.create({
+      if (created) {
+        const role = await interaction.guild.roles.create({
           name: interaction.user.username,
           colors: {
             primaryColor: !interaction.options.getString("primary_colour")
@@ -39,27 +39,17 @@ module.exports = {
           },
           reason: `Role created for ${interaction.user.username}`,
         });
-      } catch (error) {
-        failed = true;
-        logger.error(error, "Role create error");
-      }
-      try {
+
+        await currentRole.update({ role_id: role.id });
+
         await interaction.member.roles.add(role);
-      } catch (error) {
-        failed = true;
-        logger.error(error, "Role add error");
-      }
-    } else {
-      role = await interaction.guild.roles.fetch(currentRole.role_id);
-      if (!interaction.member.roles.cache.has(role.id)) {
-        try {
+        await interaction.reply(`${role} created.`);
+      } else {
+        const role = await interaction.guild.roles.fetch(currentRole.role_id);
+        if (!interaction.member.roles.cache.has(role.id)) {
           await interaction.member.roles.add(role);
-        } catch (error) {
-          failed = true;
-          logger.error(error, "Role add error");
         }
-      }
-      try {
+
         await role.setColors({
           primaryColor: !interaction.options.getString("primary_colour")
             ? undefined
@@ -68,14 +58,11 @@ module.exports = {
             ? undefined
             : interaction.options.getString("secondary_colour"),
         });
-      } catch (error) {
-        failed = true;
-        logger.error(error, "Role update error");
+        await interaction.reply(`${role} updated.`);
       }
+    } catch (error) {
+      logger.error(error, "Role create error");
+      await interaction.reply(`There was an error updating your role.`);
     }
-
-    await interaction.reply(
-      `${!failed ? `${role} updated.` : "There was an error updating your role."}`,
-    );
   },
 };

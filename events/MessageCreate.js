@@ -1,5 +1,5 @@
-const { Events } = require(`discord.js`);
-const { botResponses, questionResponses, magicball, markpings } = require(
+const { Events, AttachmentBuilder } = require(`discord.js`);
+const { botResponses, questionResponses, magicball } = require(
   `../bot-responses.json`,
 );
 
@@ -13,11 +13,7 @@ module.exports = {
       message.react(`<a:marty_board:1521751800083124366>`);
     }
     if (message.author.bot) return;
-    if (message.content.toLowerCase() == "hi mark") {
-      message.reply("https://tenor.com/bkJF4.gif");
-    } else if (message.content.includes("<@765796161499824148>")) {
-      message.reply("https://larry-games.github.io/public/img/mark.gif");
-    } else if (
+    if (
       message.content.split(" ").length > 1 &&
       message.content.slice(-1) == "?" &&
       message.mentions.has(message.client.user.id)
@@ -50,26 +46,34 @@ module.exports = {
         message.reply(magicball[type][r]);
       }
     } else {
-      const autoResponseWords = Object.keys(botResponses);
-      if (
-        autoResponseWords.some((word) =>
-          message.content.toLowerCase().includes(word),
-        )
-      ) {
-        for (let i = 0; i < autoResponseWords.length; i++) {
-          if (message.content.toLowerCase().includes(autoResponseWords[i])) {
-            if (Array.isArray(botResponses[autoResponseWords[i]])) {
-              const randomIndex = Math.floor(
-                Math.random() * botResponses[autoResponseWords[i]].length,
-              );
-              const randomResponse =
-                botResponses[autoResponseWords[i]][randomIndex];
-              message.reply(randomResponse);
-            } else {
-              message.reply(botResponses[autoResponseWords[i]]);
-            }
-          }
+      const response = Object.keys(botResponses).find((word) =>
+        message.content
+          .toLowerCase()
+          .replace(/[^a-zA-Z0-9 ]/g, "")
+          .includes(word),
+      );
+      if (!response || botResponses[response]) return;
+      if (Array.isArray(botResponses[response])) {
+        const randomIndex = Math.floor(
+          Math.random() * botResponses[response].length,
+        );
+        const randomResponse = botResponses[response][randomIndex];
+
+        if (randomResponse.includes("attachment://")) {
+          const file = new AttachmentBuilder(
+            randomResponse.replace("attachment://", "./img/"),
+          );
+          message.reply({ files: [file] });
+        } else {
+          message.reply(randomResponse);
         }
+      } else if (botResponses[response].includes("attachment://")) {
+        const file = new AttachmentBuilder(
+          botResponses[response].replace("attachment://", "./img/"),
+        );
+        message.reply({ files: [file] });
+      } else {
+        message.reply(botResponses[response]);
       }
     }
   },

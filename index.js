@@ -5,6 +5,10 @@ const logger = require(`./utils/logger.js`);
 const path = require(`node:path`);
 const fs = require(`node:fs`);
 
+process.on(`uncaughtException`, (err) => {
+  logger.error(err, `Uncaught Exception`);
+});
+
 logger.info(`*** BOT STARTING ***`);
 
 const client = new Client({

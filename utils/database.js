@@ -19,6 +19,10 @@ const dbTables = {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    birthday: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   }),
 };
 
