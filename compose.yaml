@@ -2,10 +2,12 @@ services:
   kram:
     build: .
     restart: unless-stopped
-    env_file:
-      - .env
     env:
       - DATABASE_URL=postgresql://postgres:supersecretpass@localhost:5132/kram
+      - TOKEN=MTUxNTE0NDg2MzAwNjMzMDg4MA.GaMhZT.LfhXbBrPXMRO9qD29y7rlYPlsue0_LlvEgucO4
+      - CLIENT_ID=1515144863006330880
+      - GUILD_ID=1521698513338110134
+      - ADMIN=765796161499824148
     network_mode: bridge
     volumes:
       - ./db:/app/db

@@ -5,8 +5,8 @@
   "main": "index.js",
   "baseUrl": "./",
   "scripts": {
-    "start": "node --env-file=.env --trace-warnings .",
-    "deploy": "node --env-file=.env --trace-warnings deploy-commands.js",
+    "start": "node --trace-warnings .",
+    "deploy": "node --trace-warnings deploy-commands.js",
     "lint": "eslint ."
   },
   "repository": {
