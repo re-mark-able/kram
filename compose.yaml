@@ -4,6 +4,20 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    network_mode: host
+    env:
+      - DATABASE_URL=postgresql://postgres:supersecretpass@localhost:5132/kram
+    network_mode: bridge
     volumes:
       - ./db:/app/db
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpass
+      - POSTGRES_DB=kram
+      - PGPORT=5132
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    network_mode: bridge

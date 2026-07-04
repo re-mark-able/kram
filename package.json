@@ -25,9 +25,10 @@
     "discord.js": "^14.26.4",
     "node-wordnet": "^0.1.12",
     "nspell": "^2.1.5",
+    "pg": "^8.22.0",
+    "pg-hstore": "^2.3.4",
     "pino": "^10.3.1",
     "sequelize": "^6.37.8",
-    "sqlite3": "^6.0.1",
     "systeminformation": "^5.31.11",
     "wndb-with-exceptions": "^3.0.2"
   },
