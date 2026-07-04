@@ -1,0 +1,24 @@
+name: Kram Pull Request
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check_code_formatting:
+    name: "Check API code format"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        working-directory: ./api
+        run: npm clean-install
+      - name: Run Lint
+        working-directory: .
+        run: npm run lint
