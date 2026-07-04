@@ -17,5 +17,5 @@ services:
       - PGPORT=5132
     restart: unless-stopped
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./db:/app/postgresql/data
     network_mode: bridge
