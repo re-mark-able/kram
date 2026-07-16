@@ -16,5 +16,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    volumes:
-      - ./db:/app/db
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
