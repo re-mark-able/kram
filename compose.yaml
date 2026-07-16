@@ -1,13 +1,4 @@
 services:
-  kram:
-    build: .
-    restart: unless-stopped
-    env_file:
-      - .env
-    network_mode: bridge
-    volumes:
-      - ./db:/app/db
-
   postgres:
     image: postgres:16-alpine
     environment:
@@ -18,4 +9,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./db:/app/postgresql/data
-    network_mode: bridge
+  kram:
+    depends_on:
+      - postgres
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./db:/app/db
