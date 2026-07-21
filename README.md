@@ -1,6 +1,7 @@
 # KRAM Discord bot
 
 A remarkable creation.
+Invite: https://discord.com/oauth2/authorize?client_id=1515144863006330880
 
 ## Development
 
