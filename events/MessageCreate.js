@@ -1,5 +1,5 @@
 const { Events, AttachmentBuilder, userMention, time } = require(`discord.js`);
-const { botResponses, questionResponses, magicball } = require(
+const { botResponses, questionResponses, magicball, soloResponses } = require(
   `../bot-responses.json`,
 );
 const path = require("path");
@@ -68,6 +68,8 @@ module.exports = {
 
         message.reply(magicball[type][r]);
       }
+    } else if (soloResponses[message.content.split(" ")[0]]) {
+      message.reply(soloResponses[message.content.split(" ")[0]]);
     } else {
       const response = Object.keys(botResponses).find((word) =>
         message.content
