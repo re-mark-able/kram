@@ -1,10 +1,10 @@
 {
   "botResponses": {
     "crazy": "Crazy? I was crazy once. They locked me in a room. A rubber room. A rubber room with rats. The rats made me crazy.",
-    "hey": "A horse walks into a bar.\r\n**Bartender:** Hey.\r\n**Horse:** Sure.",
     "joke": "I've got a great joke about construction, but I'm still working on it.",
     "mountain": "Mountains aren't just funny. They're hill areas.",
     "pizza": "I could tell a joke about pizza, but it's a little cheesy.",
+    "a big fan": "attachment://a_big_fan.gif",
     "sense": "100 cents make a dollar",
     "toilet": "Why are toilets always so good at poker? They always get a flush",
     "smith": "How do you follow Will Smith in the snow? You follow the fresh prints.",
@@ -107,5 +107,8 @@
       "Cannot predict now",
       "Concentrate and ask again"
     ]
+  },
+  "soloResponses": {
+    "hey": "A horse walks into a bar.\r\n**Bartender:** Hey.\r\n**Horse:** Sure."
   }
 }
