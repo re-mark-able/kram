@@ -22,19 +22,19 @@
   "homepage": "https://github.com/re-mark-able/kram#readme",
   "dependencies": {
     "dayjs": "^1.11.21",
-    "discord.js": "^14.26.4",
+    "discord.js": "^14.27.0",
     "node-wordnet": "^0.1.12",
     "nspell": "^2.1.5",
     "pg": "^8.22.0",
     "pg-hstore": "^2.3.4",
     "pino": "^10.3.1",
     "sequelize": "^6.37.8",
-    "systeminformation": "^5.31.11",
+    "systeminformation": "^5.33.0",
     "wndb-with-exceptions": "^3.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.6.0",
+    "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "pino-pretty": "^13.1.3"

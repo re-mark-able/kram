@@ -5,7 +5,7 @@ on:
 
 jobs:
   check_code_formatting:
-    name: "Check API code format"
+    name: "Check code formatting"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: "lts/*"
       - name: Install dependencies
-        working-directory: ./api
+        working-directory: .
         run: npm clean-install
       - name: Run Lint
         working-directory: .
