@@ -7,9 +7,9 @@ module.exports = {
   async execute(interaction) {
     try {
       const invite = await interaction.channel.createInvite({
-        maxAge: 0,      // never expires
-        maxUses: 0,     // unlimited uses
-        unique: false,  // reuse an existing similar invite if one exists
+        maxAge: 0, // never expires
+        maxUses: 0, // unlimited uses
+        unique: false, // reuse an existing similar invite if one exists
       });
 
       await interaction.reply(`https://discord.gg/${invite.code}`);
