@@ -1,10 +1,8 @@
 const {
   SlashCommandBuilder,
-  PermissionFlagsBits,
   ContainerBuilder,
   MessageFlags,
   AttachmentBuilder,
-  SectionBuilder,
 } = require("discord.js");
 const colourNames = require("../json/colours.json");
 const { createCanvas } = require("@napi-rs/canvas");
@@ -75,7 +73,6 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("colour")
     .setContexts(0)
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDescription("View colour info")
     .addStringOption((option) =>
       option
