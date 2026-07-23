@@ -26,22 +26,10 @@ for (const file of commandFiles) {
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(process.env.TOKEN);
 
-// delete all commands
-rest
-  .put(
-    Routes.applicationGuildCommands(
-      process.env.CLIENT_ID,
-      process.env.GUILD_ID,
-    ),
-    { body: [] },
-  )
-  .then(() => logger.info("Successfully deleted all guild commands."))
-  .catch(logger.error);
-
 // for global commands
 rest
   .put(Routes.applicationCommands(process.env.CLIENT_ID), { body: [] })
-  .then(() => logger.info("Successfully deleted all application commands."))
+  .then(() => logger.info("Successfully deleted all global commands."))
   .catch(logger.error);
 
 // and deploy your commands!
@@ -53,10 +41,7 @@ rest
 
     // The put method is used to fully refresh all commands in the guild with the current set
     const data = await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID,
-      ),
+      Routes.applicationCommands(process.env.CLIENT_ID),
       { body: commands },
     );
 

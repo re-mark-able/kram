@@ -1,27 +1,26 @@
 const {
-  Events,
-  ContainerBuilder,
+  SlashCommandBuilder,
   MessageFlags,
-  MediaGalleryBuilder,
-  AttachmentBuilder,
+  PermissionFlagsBits,
   userMention,
+  AttachmentBuilder,
+  MediaGalleryBuilder,
+  ContainerBuilder,
 } = require("discord.js");
-const config = require("../utils/config.js");
-
+const { defaultColour } = require("../utils/config");
 const path = require("path");
 const absolutePath = path.join(__dirname, "..", "img");
-
 module.exports = {
-  name: Events.GuildMemberAdd,
-  async execute(member) {
+  data: new SlashCommandBuilder()
+    .setName("test")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDescription("Mark's test command"),
+  async execute(interaction) {
+    const member = interaction.member;
+    const welcomeChannel = interaction.channel;
     if (member.user.bot) return;
-    const welcomeChannel = member.guild.channels.cache.get(
-      config.channels.welcome,
-    );
-
     const allCommands = await member.client.application.commands.fetch();
     const roleCommand = allCommands.findKey((c) => c.name === "role");
-
     const welcomeContent = [
       `### Welcome to the server, ${userMention(member.user.id)}!`,
       `Have fun and enjoy your stay. Use </role:${roleCommand}> to create your own role and set your role color.`,
@@ -31,7 +30,7 @@ module.exports = {
     const file = new AttachmentBuilder(`${absolutePath}/they_found_me.gif`);
 
     const welcomeContainer = new ContainerBuilder()
-      .setAccentColor(config.defaultColour)
+      .setAccentColor(defaultColour)
       .addTextDisplayComponents((textDisplay) =>
         textDisplay.setContent(welcomeContent.join("\n")),
       )
