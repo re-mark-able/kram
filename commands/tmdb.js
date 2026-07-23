@@ -3,9 +3,6 @@ const {
   SlashCommandBuilder,
   MessageFlags,
   ContainerBuilder,
-  Colors,
-  AttachmentBuilder,
-  MediaGalleryBuilder,
 } = require("discord.js");
 const logger = require("../utils/logger");
 const { tmdb, defaultColour } = require("../utils/config");
