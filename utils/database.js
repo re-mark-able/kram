@@ -1,11 +1,19 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const logger = require("../utils/logger");
+const { testMode } = require("../utils/config");
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "postgres",
-  logging: false,
-  timezone: "+08:00",
-});
+const sequelize = !testMode
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialect: "postgres",
+      logging: false,
+      timezone: "+08:00",
+    })
+  : new Sequelize({
+      dialect: "sqlite",
+      storage: "db/database.sqlite",
+      logging: false,
+      timezone: "+08:00",
+    });
 
 const dbTables = {
   User: sequelize.define("User", {
