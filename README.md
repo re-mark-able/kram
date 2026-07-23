@@ -1,7 +1,7 @@
 # KRAM Discord bot
 
 A remarkable creation.
-Server invite: https://discord.com/oauth2/authorize?client_id=1515144863006330880
+PROD Bot invite: https://discord.com/oauth2/authorize?client_id=1515144863006330880
 
 Kram utilises Discord.JS v14. You can find more infomation and examples for use at https://discordjs.guide
 
