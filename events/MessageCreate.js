@@ -1,6 +1,6 @@
 const { Events, AttachmentBuilder, userMention, time } = require(`discord.js`);
 const { botResponses, questionResponses, magicball, soloResponses } = require(
-  `../bot-responses.json`,
+  `../json/bot-responses.json`,
 );
 const path = require("path");
 const logger = require("../utils/logger");
