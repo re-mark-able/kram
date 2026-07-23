@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/re-mark-able/kram#readme",
   "dependencies": {
+    "@napi-rs/canvas": "^1.0.2",
     "dayjs": "^1.11.21",
     "discord.js": "^14.27.0",
+    "node-cron": "^4.6.0",
     "node-wordnet": "^0.1.12",
     "nspell": "^2.1.5",
     "pg": "^8.22.0",
