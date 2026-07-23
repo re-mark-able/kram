@@ -5,8 +5,8 @@
   "main": "index.js",
   "baseUrl": "./",
   "scripts": {
-    "start": "node --trace-warnings .",
-    "deploy": "node --trace-warnings deploy-commands.js",
+    "start": "node --env-file=.env --trace-warnings --no-network-family-autoselection .",
+    "deploy": "node --env-file=.env --trace-warnings deploy-commands.js",
     "lint": "eslint ."
   },
   "repository": {
@@ -39,5 +39,9 @@
     "eslint-plugin-prettier": "^5.5.6",
     "pino-pretty": "^13.1.3",
     "sqlite3": "^6.0.1"
+  },
+  "allowScripts": {
+    "wndb-with-exceptions@3.0.2": true,
+    "sqlite3@6.0.1": true
   }
 }
