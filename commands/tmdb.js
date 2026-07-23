@@ -3,6 +3,10 @@ const {
   SlashCommandBuilder,
   MessageFlags,
   ContainerBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  ComponentType,
+  MediaGalleryBuilder,
 } = require("discord.js");
 const logger = require("../utils/logger");
 const { tmdb, defaultColour } = require("../utils/config");
@@ -78,10 +82,76 @@ module.exports = {
           ),
         );
 
-      return await interaction.reply({
+      if (json.results.length > 1) {
+        // add select menu with extras
+        const selectMenu = new StringSelectMenuBuilder()
+          .setCustomId("change_title")
+          .setPlaceholder("Change result");
+
+        for (const [id, result] of json.results.entries()) {
+          const option = new StringSelectMenuOptionBuilder()
+            .setValue(id.toString())
+            .setLabel(!result.title ? result.original_name : result.title);
+
+          selectMenu.addOptions(option);
+        }
+        responseContainer.addActionRowComponents((actionRow) =>
+          actionRow.setComponents(selectMenu),
+        );
+      }
+
+      const response = await interaction.reply({
         components: [responseContainer],
         flags: MessageFlags.IsComponentsV2,
+        withResponse: true,
       });
+
+      const responseFilter = (i) => i.user.id === interaction.user.id;
+
+      const collector =
+        response.resource.message.createMessageComponentCollector({
+          componentType: ComponentType.StringSelect,
+          time: 60_000,
+          filter: responseFilter,
+        });
+      collector.on("collect", async (i) => {
+        await i.deferUpdate();
+
+        const first = json.results[parseInt(i.values[0])];
+
+        const responseText = [
+          `### [${!first.title ? first.original_name : first.title} (${!first.first_air_date ? first.release_date.split("-")[0] : first.first_air_date.split("-")[0]})](<https://www.themoviedb.org/${interaction.options.getString("search_type")}/${first.id}>)`,
+          `> ${first.overview}`,
+        ];
+        if (json.results.length > 1) {
+          responseText.push(
+            ``,
+            `-# _... and ${json.results.length - 1} other results_`,
+          );
+        }
+
+        responseContainer.components[0].setContent(responseText.join("\n"));
+
+        responseContainer.components[1] = new MediaGalleryBuilder().addItems(
+          (mediaItem) =>
+            mediaItem
+
+              .setDescription(!first.title ? first.original_name : first.title)
+              .setURL(
+                `https://image.tmdb.org/t/p/original/${first.poster_path}`,
+              ),
+        );
+        await interaction.editReply({
+          components: [responseContainer],
+        });
+      });
+
+      collector.on("end", async () => {
+        responseContainer.components.pop();
+        await interaction.editReply({ components: [responseContainer] });
+      });
+
+      return;
     } catch (error) {
       logger.error(error, "Failed to search TMDB:");
 

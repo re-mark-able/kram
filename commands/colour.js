@@ -3,6 +3,10 @@ const {
   ContainerBuilder,
   MessageFlags,
   AttachmentBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  ComponentType,
+  ActionRowBuilder,
 } = require("discord.js");
 const colourNames = require("../json/colours.json");
 const { createCanvas } = require("@napi-rs/canvas");
@@ -144,11 +148,107 @@ module.exports = {
         await getHexSection(currentHex);
       }
 
-      return await interaction.reply({
+      const allOptions = [];
+      for (let i = 0; i < Object.keys(colourNames).length; i += 20) {
+        allOptions.push(Object.keys(colourNames).slice(i, i + 20));
+      }
+      let selectedPage = 0;
+      let selectedOption = null;
+
+      const createColourMenu = () => {
+        const menu = new StringSelectMenuBuilder()
+          .setCustomId("select_colour")
+          .setPlaceholder("Select a colour to view");
+
+        if (selectedPage > 0) {
+          menu.addOptions(
+            new StringSelectMenuOptionBuilder()
+              .setLabel("Back page")
+              .setEmoji("🔼")
+              .setValue("back"),
+          );
+        }
+
+        for (const option of allOptions[selectedPage]) {
+          menu.addOptions(
+            new StringSelectMenuOptionBuilder()
+              .setDefault(selectedOption === option ? true : false)
+              .setLabel(option)
+              .setValue(option),
+          );
+        }
+
+        if (selectedPage < allOptions.length - 1) {
+          menu.addOptions(
+            new StringSelectMenuOptionBuilder()
+              .setLabel("Next page")
+              .setEmoji("🔽")
+              .setValue("next"),
+          );
+        }
+        components.push(new ActionRowBuilder().setComponents(menu));
+      };
+
+      await createColourMenu();
+
+      // Add a select menu to change colour from names
+
+      const response = await interaction.reply({
         files: files,
         components: components,
         flags: MessageFlags.IsComponentsV2,
+        withResponse: true,
       });
+
+      const responseFilter = (i) => i.user.id === interaction.user.id;
+
+      const collector =
+        response.resource.message.createMessageComponentCollector({
+          componentType: ComponentType.StringSelect,
+          time: 120_000,
+          filter: responseFilter,
+        });
+
+      collector.on("collect", async (i) => {
+        await i.deferUpdate();
+
+        if (i.values[0] === "back") {
+          selectedPage--;
+          components.pop();
+          await createColourMenu();
+          return await interaction.editReply({ components: components });
+        } else if (i.values[0] === "next") {
+          selectedPage++;
+          components.pop();
+          await createColourMenu();
+          return await interaction.editReply({ components: components });
+        } else {
+          // select the colour
+          while (components.length > 0) {
+            components.pop();
+          }
+          while (files.length > 0) {
+            files.pop();
+          }
+          selectedOption = i.values[0];
+          const currentHex = colourNames[selectedOption];
+
+          await getHexSection(currentHex);
+          await createColourMenu();
+
+          return await interaction.editReply({
+            components: components,
+            files: files,
+          });
+        }
+      });
+
+      collector.on("end", async () => {
+        components[0].components.pop();
+        await interaction.editReply({ components: components });
+      });
+
+      return;
     } catch (err) {
       logger.error(err, "Colour display error:");
       return await interaction.reply({
