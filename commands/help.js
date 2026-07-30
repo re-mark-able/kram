@@ -20,11 +20,12 @@ const helpContent = [
   `> \`/invite    \` Link for this server`,
   `> \`/name_style\` (admin) Change the font styles for the Bot`,
   `> \`/ping      \` Ping the bot`,
+  `> \`/play      \` Search for a board game`,
   `> \`/reload    \` (admin) Reload commands`,
   `> \`/role      \` Create your own role with colour`,
   `> \`/temp      \` Convert °C to °F and vice-versa`,
   `> \`/time      \` Convert time`,
-  `> \`/tmdb      \` Find movies or TV shows`,
+  `> \`/watch     \` Find movies or TV shows`,
 ];
 
 module.exports = {
