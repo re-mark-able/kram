@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const logger = require("../utils/logger");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,7 +15,7 @@ module.exports = {
 
       await interaction.reply(`https://discord.gg/${invite.code}`);
     } catch (error) {
-      console.error("Failed to create invite:", error);
+      logger.error(error, "Failed to create invite:");
       await interaction.reply({
         content: "I don't have permission to create an invite for this server.",
         flags: MessageFlags.Ephemeral,

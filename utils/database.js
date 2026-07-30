@@ -36,12 +36,14 @@ const dbTables = {
       allowNull: true,
     },
   }),
-  WatchList: sequelize.define("WatchList", {
+  UserList: sequelize.define("UserList", {
     user_id: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      primaryKey: true,
+    },
+    type: {
+      type: DataTypes.ENUM("boardgame", "movie", "show"),
+      allowNull: false,
     },
     item_id: {
       type: DataTypes.STRING,
@@ -50,42 +52,44 @@ const dbTables = {
     count: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+    },
+    last: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
     in_queue: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     currently_watching: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    current_episode: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    last_watch: {
-      type: DataTypes.DATE,
-      allowNull: true,
+      defaultValue: null,
     },
     rating: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      defaultValue: 0,
     },
-    watched_with: {
-      type: DataTypes.JSON,
-      allowNull: true,
+    last_episode: {
+      type: DataTypes.STRING,
+      defaultValue: null,
     },
     comments: {
       type: DataTypes.JSON,
-      allowNull: true,
+      defaultValue: null,
+    },
+    users: {
+      type: DataTypes.JSON,
+      defaultValue: null,
     },
   }),
-  PlayList: sequelize.define("PlayList", {
-    user_id: {
+  ServerList: sequelize.define("UserList", {
+    guild_id: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      primaryKey: true,
+    },
+    type: {
+      type: DataTypes.ENUM("boardgame", "movie", "show"),
+      allowNull: false,
     },
     item_id: {
       type: DataTypes.STRING,
@@ -95,25 +99,33 @@ const dbTables = {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    last: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     in_queue: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    last_play: {
-      type: DataTypes.DATE,
-      allowNull: true,
+    currently_watching: {
+      type: DataTypes.STRING,
+      defaultValue: null,
     },
     rating: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      defaultValue: 0,
     },
-    played_with: {
-      type: DataTypes.JSON,
-      allowNull: true,
+    last_episode: {
+      type: DataTypes.STRING,
+      defaultValue: null,
     },
     comments: {
       type: DataTypes.JSON,
-      allowNull: true,
+      defaultValue: null,
+    },
+    users: {
+      type: DataTypes.JSON,
+      defaultValue: null,
     },
   }),
 };
