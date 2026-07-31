@@ -12,4 +12,6 @@ module.exports = {
   backPage: "⏪",
   nextPage: "⏩",
   lastPage: "⏭️",
+  no: "🚫",
+  check: "✅",
 };
