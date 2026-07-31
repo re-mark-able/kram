@@ -6,7 +6,8 @@ const {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
   ComponentType,
-  MediaGalleryBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const logger = require("../utils/logger");
 const { tmdb, defaultColour } = require("../utils/config");
@@ -54,54 +55,99 @@ module.exports = {
         });
       }
 
-      const first = json.results[0];
+      const results = json.results;
 
-      const responseText = [
-        `### [${!first.title ? first.original_name : first.title} (${!first.first_air_date ? first.release_date.split("-")[0] : first.first_air_date.split("-")[0]})](<https://www.themoviedb.org/${interaction.options.getString("search_type")}/${first.id}>)`,
-        `> ${first.overview}`,
-      ];
-      if (json.results.length > 1) {
-        responseText.push(
-          ``,
-          `-# _... and ${json.results.length - 1} other results_`,
-        );
-      }
-
-      const responseContainer = new ContainerBuilder()
-        .setAccentColor(defaultColour)
-        .addTextDisplayComponents((textDisplay) =>
-          textDisplay.setContent(responseText.join("\n")),
-        )
-        .addMediaGalleryComponents((mediaGallery) =>
-          mediaGallery.addItems((mediaGalleryItem) =>
-            mediaGalleryItem
-              .setDescription(!first.title ? first.original_name : first.title)
-              .setURL(
-                `https://image.tmdb.org/t/p/original/${first.poster_path}`,
-              ),
+      results.sort(
+        (b, a) =>
+          parseInt(
+            !a.first_air_date
+              ? a.release_date.split("-")[0]
+              : a.first_air_date.split("-")[0],
+          ) -
+          parseInt(
+            !b.first_air_date
+              ? b.release_date.split("-")[0]
+              : b.first_air_date.split("-")[0],
           ),
-        );
+      );
 
-      if (json.results.length > 1) {
-        // add select menu with extras
-        const selectMenu = new StringSelectMenuBuilder()
-          .setCustomId("change_title")
-          .setPlaceholder("Change result");
+      let currentResult = results[0];
 
-        for (const [id, result] of json.results.entries()) {
-          const option = new StringSelectMenuOptionBuilder()
-            .setValue(id.toString())
-            .setLabel(!result.title ? result.original_name : result.title);
+      const getResultContainer = (withActions = true) => {
+        const responseText = [
+          `### [${!currentResult.title ? currentResult.original_name : currentResult.title} (${!currentResult.first_air_date ? currentResult.release_date.split("-")[0] : currentResult.first_air_date.split("-")[0]})](<https://www.themoviedb.org/${interaction.options.getString("search_type")}/${currentResult.id}>)`,
+          `> ${currentResult.overview}`,
+        ];
+        if (results.length > 1) {
+          responseText.push(
+            ``,
+            `-# _... and ${results.length - 1} other results_`,
+          );
+        }
 
-          selectMenu.addOptions(option);
+        const responseContainer = new ContainerBuilder()
+          .setAccentColor(defaultColour)
+          .addTextDisplayComponents((textDisplay) =>
+            textDisplay.setContent(responseText.join("\n")),
+          )
+          .addMediaGalleryComponents((mediaGallery) =>
+            mediaGallery.addItems((mediaGalleryItem) =>
+              mediaGalleryItem
+                .setDescription(
+                  !currentResult.title
+                    ? currentResult.original_name
+                    : currentResult.title,
+                )
+                .setURL(
+                  `https://image.tmdb.org/t/p/original/${currentResult.poster_path}`,
+                ),
+            ),
+          );
+
+        if (results.length > 1 && withActions === true) {
+          // add select menu with extras
+          const selectMenu = new StringSelectMenuBuilder()
+            .setCustomId("change_title")
+            .setPlaceholder("Change result");
+
+          for (const [id, result] of results.entries()) {
+            const option = new StringSelectMenuOptionBuilder()
+              .setValue(id.toString())
+              .setDefault(result.id === currentResult.id ? true : false)
+              .setLabel(
+                `${!result.title ? result.original_name : result.title} [${!result.first_air_date ? result.release_date.split("-")[0] : result.first_air_date.split("-")[0]}]`,
+              );
+
+            selectMenu.addOptions(option);
+          }
+          responseContainer.addActionRowComponents((actionRow) =>
+            actionRow.setComponents(selectMenu),
+          );
         }
         responseContainer.addActionRowComponents((actionRow) =>
-          actionRow.setComponents(selectMenu),
+          actionRow.setComponents(
+            new ButtonBuilder()
+              .setCustomId("watch")
+              .setLabel("Mark as Watched")
+              .setDisabled(!withActions ? true : false)
+              .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
+              .setCustomId("server_watch")
+              .setLabel("Mark as Server Watched")
+              .setDisabled(!withActions ? true : false)
+              .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
+              .setCustomId("queue")
+              .setLabel("Add to queue")
+              .setDisabled(!withActions ? true : false)
+              .setStyle(ButtonStyle.Success),
+          ),
         );
-      }
+        return responseContainer;
+      };
 
       const response = await interaction.reply({
-        components: [responseContainer],
+        components: [await getResultContainer()],
         flags: MessageFlags.IsComponentsV2,
         withResponse: true,
       });
@@ -117,38 +163,17 @@ module.exports = {
       collector.on("collect", async (i) => {
         await i.deferUpdate();
 
-        const first = json.results[parseInt(i.values[0])];
+        currentResult = results[parseInt(i.values[0])];
 
-        const responseText = [
-          `### [${!first.title ? first.original_name : first.title} (${!first.first_air_date ? first.release_date.split("-")[0] : first.first_air_date.split("-")[0]})](<https://www.themoviedb.org/${interaction.options.getString("search_type")}/${first.id}>)`,
-          `> ${first.overview}`,
-        ];
-        if (json.results.length > 1) {
-          responseText.push(
-            ``,
-            `-# _... and ${json.results.length - 1} other results_`,
-          );
-        }
-
-        responseContainer.components[0].setContent(responseText.join("\n"));
-
-        responseContainer.components[1] = new MediaGalleryBuilder().addItems(
-          (mediaItem) =>
-            mediaItem
-
-              .setDescription(!first.title ? first.original_name : first.title)
-              .setURL(
-                `https://image.tmdb.org/t/p/original/${first.poster_path}`,
-              ),
-        );
         await interaction.editReply({
-          components: [responseContainer],
+          components: [await getResultContainer()],
         });
       });
 
       collector.on("end", async () => {
-        responseContainer.components.pop();
-        await interaction.editReply({ components: [responseContainer] });
+        await interaction.editReply({
+          components: [await getResultContainer(false)],
+        });
       });
 
       return;

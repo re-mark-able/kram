@@ -15,6 +15,7 @@ module.exports = {
   name: Events.GuildMemberAdd,
   async execute(member) {
     if (member.user.bot) return;
+    if (member.guild.id !== config.guildId) return;
     const welcomeChannel = member.guild.channels.cache.get(
       config.channels.welcome,
     );
