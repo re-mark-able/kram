@@ -9,11 +9,15 @@ services:
     restart: unless-stopped
     volumes:
       - ./db:/app/postgresql/data
+    ports:
+      - "1132:5432"
   kram:
     depends_on:
       - postgres
     build: .
     restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://postgres:supersecretpass@postgres:5432/kram
     env_file:
       - .env
     dns:
