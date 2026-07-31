@@ -5,12 +5,12 @@ const {
   ContainerBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  ComponentType,
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
 const logger = require("../utils/logger");
 const { tmdb, defaultColour } = require("../utils/config");
+const dbTables = require("../utils/database");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -56,6 +56,17 @@ module.exports = {
       }
 
       const results = json.results;
+      let serverQueue = await dbTables.ServerList.findAll({
+        where: {
+          guild_id: interaction.guild.id,
+        },
+      });
+
+      let userQueue = await dbTables.UserList.findAll({
+        where: {
+          user_id: interaction.user.id,
+        },
+      });
 
       results.sort(
         (b, a) =>
@@ -124,25 +135,91 @@ module.exports = {
             actionRow.setComponents(selectMenu),
           );
         }
-        responseContainer.addActionRowComponents((actionRow) =>
-          actionRow.setComponents(
-            new ButtonBuilder()
-              .setCustomId("watch")
-              .setLabel("Mark as Watched")
-              .setDisabled(!withActions ? true : false)
-              .setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder()
-              .setCustomId("server_watch")
-              .setLabel("Mark as Server Watched")
-              .setDisabled(!withActions ? true : false)
-              .setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder()
-              .setCustomId("queue")
-              .setLabel("Add to queue")
-              .setDisabled(!withActions ? true : false)
-              .setStyle(ButtonStyle.Success),
-          ),
+
+        const userFound = userQueue.find(
+          (item) => item.item_id == currentResult.id,
         );
+        const serverFound = serverQueue.find(
+          (item) => item.item_id == currentResult.id,
+        );
+        if (withActions) {
+          responseContainer
+            .addTextDisplayComponents((textDisplay) =>
+              textDisplay.setContent(`-# **${interaction.user.username}:**`),
+            )
+            .addActionRowComponents((actionRow) =>
+              actionRow.setComponents(
+                new ButtonBuilder()
+                  .setCustomId("user_queue")
+                  .setLabel(
+                    !userFound
+                      ? "Add to your queue"
+                      : !userFound.rating || userFound.rating === 0
+                        ? "Remove from your queue"
+                        : "Add to your queue (rewatch)",
+                  )
+                  .setDisabled(!withActions ? true : false)
+                  .setStyle(
+                    !userFound
+                      ? ButtonStyle.Primary
+                      : !userFound.rating || userFound.rating === 0
+                        ? ButtonStyle.Danger
+                        : ButtonStyle.Secondary,
+                  ),
+                new ButtonBuilder()
+                  .setCustomId("user_watch")
+                  .setLabel(
+                    !userFound || userFound.rating === 0
+                      ? "Mark as user watched"
+                      : "Mark as user unwatched",
+                  )
+                  .setDisabled(!withActions ? true : false)
+                  .setStyle(
+                    !userFound || userFound.rating === 0
+                      ? ButtonStyle.Primary
+                      : ButtonStyle.Danger,
+                  ),
+              ),
+            );
+          responseContainer
+            .addTextDisplayComponents((textDisplay) =>
+              textDisplay.setContent(`-# **${interaction.guild.name}:**`),
+            )
+            .addActionRowComponents((actionRow) =>
+              actionRow.setComponents(
+                new ButtonBuilder()
+                  .setCustomId("server_queue")
+                  .setLabel(
+                    !serverFound
+                      ? "Add to server queue"
+                      : !serverFound.rating || serverFound.rating === 0
+                        ? "Remove from server queue"
+                        : "Add to server queue (rewatch)",
+                  )
+                  .setDisabled(!withActions ? true : false)
+                  .setStyle(
+                    !userFound
+                      ? ButtonStyle.Primary
+                      : !userFound.rating || userFound.rating === 0
+                        ? ButtonStyle.Danger
+                        : ButtonStyle.Secondary,
+                  ),
+                new ButtonBuilder()
+                  .setCustomId("server_watch")
+                  .setLabel(
+                    !serverFound || serverFound.rating === 0
+                      ? "Mark as server watched"
+                      : "Mark as server unwatched",
+                  )
+                  .setDisabled(!withActions ? true : false)
+                  .setStyle(
+                    !serverFound || serverFound.rating === 0
+                      ? ButtonStyle.Primary
+                      : ButtonStyle.Danger,
+                  ),
+              ),
+            );
+        }
         return responseContainer;
       };
 
@@ -156,18 +233,23 @@ module.exports = {
 
       const collector =
         response.resource.message.createMessageComponentCollector({
-          componentType: ComponentType.StringSelect,
           time: 60_000,
           filter: responseFilter,
         });
       collector.on("collect", async (i) => {
         await i.deferUpdate();
+        if (i.customId === "change_title") {
+          currentResult = results[parseInt(i.values[0])];
 
-        currentResult = results[parseInt(i.values[0])];
-
-        await interaction.editReply({
-          components: [await getResultContainer()],
-        });
+          await interaction.editReply({
+            components: [await getResultContainer()],
+          });
+        } else {
+          // it is a button
+          // Open user modal
+          // open server modal
+          // toggle queue
+        }
       });
 
       collector.on("end", async () => {

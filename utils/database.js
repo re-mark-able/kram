@@ -82,7 +82,7 @@ const dbTables = {
       defaultValue: null,
     },
   }),
-  ServerList: sequelize.define("UserList", {
+  ServerList: sequelize.define("ServerList", {
     guild_id: {
       type: DataTypes.STRING,
       allowNull: false,
