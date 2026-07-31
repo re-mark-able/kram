@@ -8,7 +8,7 @@ services:
       - PGPORT=5132
     restart: unless-stopped
     volumes:
-      - db:/app/postgresql/data
+      - ./db:/app/postgresql/data
     ports:
       - "1132:5432"
   kram:
@@ -23,6 +23,3 @@ services:
     dns:
       - 8.8.8.8
       - 1.1.1.1
-
-  volumes:
-    db:
