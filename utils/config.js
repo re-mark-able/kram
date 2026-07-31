@@ -7,10 +7,8 @@ module.exports = {
     development: "1521698516819251272",
     botLogs: "1529025931195191326",
   },
-  tmdb: {
-    key: process.env.TMDB_KEY || undefined,
-    token: process.env.TMDB_TOKEN || undefined,
-  },
+  tmdbKey: process.env.TMDB_KEY || undefined,
+  tmdbToken: process.env.TMDB_TOKEN || undefined,
   bggToken: process.env.BGG_TOKEN || undefined,
   defaultColour: 0xffd1a5,
 };

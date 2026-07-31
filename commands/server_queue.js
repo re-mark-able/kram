@@ -11,6 +11,7 @@ const dbTables = require("../utils/database");
 const { defaultColour } = require("../utils/config");
 const emojiMap = require("../utils/emojiMap");
 const { Op } = require("sequelize");
+const tmdb = require("../utils/tmdb");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -58,7 +59,7 @@ module.exports = {
       },
     });
 
-    const getServerQueueContainer = (withActions = true) => {
+    const getServerQueueContainer = async (withActions = true) => {
       const container = new ContainerBuilder()
         .setAccentColor(defaultColour)
         .addTextDisplayComponents((textDisplay) =>
@@ -73,6 +74,25 @@ module.exports = {
           ),
         );
       } else {
+        for (const item of serverQueue.slice(currentPage * perPage, perPage)) {
+          const currentResult = await tmdb.searchByID(item.item_id);
+          const responseText = [
+            `### [${!currentResult.title ? currentResult.original_name : currentResult.title} (${!currentResult.first_air_date ? currentResult.release_date.split("-")[0] : currentResult.first_air_date.split("-")[0]})](<https://www.themoviedb.org/${interaction.options.getString("search_type")}/${currentResult.id}>)`,
+            // check for rating?
+          ];
+          container.addSectionComponents((section) =>
+            section
+              .addTextDisplayComponents((textDisplay) =>
+                textDisplay.setContent(responseText.join("\n")),
+              )
+              .setThumbnailAccessory((thumbnail) =>
+                thumbnail.setURL(
+                  `${tmdb.imgURLprefix}${currentResult.poster_path}`,
+                ),
+              ),
+          );
+        }
+
         // display items in container
         // Container to display title, year, cover image
         // Do we need a select menu or something to "mark as watched?"
@@ -84,6 +104,7 @@ module.exports = {
             new StringSelectMenuBuilder()
               .setCustomId("select_type")
               .setPlaceholder("Change queue")
+              .setDisabled(!withActions ? true : false)
               .addOptions(
                 new StringSelectMenuOptionBuilder()
                   .setValue("boardgame")
@@ -114,6 +135,7 @@ module.exports = {
             new StringSelectMenuBuilder()
               .setCustomId("select_status")
               .setPlaceholder("Change status")
+              .setDisabled(!withActions ? true : false)
               .addOptions(
                 new StringSelectMenuOptionBuilder()
                   .setValue("unwatched")
@@ -141,19 +163,23 @@ module.exports = {
               .setCustomId("first_page")
               .setStyle(ButtonStyle.Secondary)
               .setEmoji(emojiMap.firstPage)
-              .setDisabled(currentPage <= 0 && withActions ? true : false),
+              .setDisabled(
+                currentPage <= 0 && withActions !== false ? true : false,
+              ),
             new ButtonBuilder()
               .setCustomId("back_page")
               .setStyle(ButtonStyle.Secondary)
               .setEmoji(emojiMap.backPage)
-              .setDisabled(currentPage <= 0 && withActions ? true : false),
+              .setDisabled(
+                currentPage <= 0 && withActions !== false ? true : false,
+              ),
             new ButtonBuilder()
               .setCustomId("next_page")
               .setStyle(ButtonStyle.Secondary)
               .setEmoji(emojiMap.nextPage)
               .setDisabled(
-                currentPage >= Math.ceil(serverQueue.length / perPage) &&
-                  withActions
+                currentPage >= Math.ceil(serverQueue.length / perPage) - 1 &&
+                  withActions !== false
                   ? true
                   : false,
               ),
@@ -162,8 +188,8 @@ module.exports = {
               .setStyle(ButtonStyle.Secondary)
               .setEmoji(emojiMap.lastPage)
               .setDisabled(
-                currentPage >= Math.ceil(serverQueue.length / perPage) &&
-                  withActions
+                currentPage >= Math.ceil(serverQueue.length / perPage) - 1 &&
+                  withActions !== false
                   ? true
                   : false,
               ),
@@ -175,7 +201,7 @@ module.exports = {
     };
 
     await interaction.followUp({
-      components: [getServerQueueContainer()],
+      components: [await getServerQueueContainer()],
       flags: MessageFlags.IsComponentsV2,
     });
 
@@ -198,7 +224,7 @@ module.exports = {
             },
           });
           await interaction.editReply({
-            components: [getServerQueueContainer()],
+            components: [await getServerQueueContainer()],
           });
         } else if (i.customId === "select_status") {
           // Select menu
@@ -218,7 +244,7 @@ module.exports = {
             },
           });
           await interaction.editReply({
-            components: [getServerQueueContainer()],
+            components: [await getServerQueueContainer()],
           });
         } else {
           // Page button
@@ -239,7 +265,7 @@ module.exports = {
               break;
           }
           await interaction.editReply({
-            components: [getServerQueueContainer()],
+            components: [await getServerQueueContainer()],
           });
         }
       } else {
@@ -251,7 +277,7 @@ module.exports = {
     });
     collector.on("end", async () => {
       await interaction.editReply({
-        components: [getServerQueueContainer(false)],
+        components: [await getServerQueueContainer(false)],
       });
     });
   },
