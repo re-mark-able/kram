@@ -8,7 +8,6 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-const logger = require("../utils/logger");
 const { defaultColour } = require("../utils/config");
 const dbTables = require("../utils/database");
 const tmdb = require("../utils/tmdb");
@@ -35,7 +34,7 @@ module.exports = {
         .setRequired(true),
     ),
   async execute(interaction) {
-    let results = await tmdb.search(
+    const results = await tmdb.search(
       interaction.options.getString("search_string"),
       interaction.options.getString("search_type"),
     );

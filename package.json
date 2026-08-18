@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node --env-file=.env --trace-warnings --no-network-family-autoselection .",
     "deploy": "node --env-file=.env --trace-warnings deploy-commands.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
