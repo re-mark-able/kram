@@ -55,6 +55,17 @@ module.exports = {
           ),
     ]; // The colors to use encoded as an array of integers representing hexadecimal color codes (max 2)
     const rest = new REST().setToken(process.env.TOKEN);
+
+    for (const guild of interaction.client.guilds.cache.values()) {
+      await rest.patch(`/guilds/${guild.id}/members/@me`, {
+        body: {
+          display_name_font_id: fontId,
+          display_name_effect_id: effectId,
+          display_name_colors: colors,
+        },
+      });
+    }
+    /*
     await rest.patch(`/guilds/${interaction.guild.id}/members/@me`, {
       body: {
         display_name_font_id: fontId,
@@ -62,7 +73,7 @@ module.exports = {
         display_name_colors: colors,
       },
     });
-
+*/
     await interaction.reply("Done");
   },
 };
